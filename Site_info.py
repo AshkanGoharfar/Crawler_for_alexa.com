@@ -111,6 +111,11 @@ def do_crawler_with_chromedrivers(my_urls, category):
     #     # ' +
     #     'site link, category,keyword_opportunities_breakdown_optimization_opportunities,keyword_opportunities_breakdown_keyword_gaps,keyword_opportunities_breakdown_easy_to_rank_keywords,keyword_opportunities_breakdown_buyer_keywords,all_topics_keyword_gaps name, all_topics_keyword_gaps Avg traffic, all_topics_keyword_gaps search popularity ,all_topics_easy_to_rank_keywords name,all_topics_easy_to_rank_keywords relevance to site,all_topics_easy_to_rank_keywords search pop,all_topics_buyer_keywords name,all_topics_buyer_keywords Avg traffic,all_topics_buyer_keywords organic competition,all_topics_optimization_opportunities name,all_topics_optimization_opportunities search pop,all_topics_optimization_opportunities organic share of voice,all_topics_top_keywords name,all_topics_top_keywords search traffic,all_topics_top_keywords share of voice,comparison_metrics_search_traffic_this_site,comparison_metrics_search_traffic_Comp Avg,comparison_metrics_data_bounce_rate_this_site,comparison_metrics_data_bounce_rate_comp_avg,comparison_metrics_data_sites_linking_in_this_site,comparison_metrics_data_sites_linking_in_comp_avg,audience overlap sites overlap scores,audience overlap similar sites to this site,audience overlap alexa rank,alexa rank in 90 day trend in global internet engagement,alexa rank in 90 day trend daily time on site,traffic_source_site name,traffic_source_Percentage_overall_site_traffic,referral_sites_names,referral_sites_how_many_other_sites_drive_traffic_to_them,sites_audience_interests_internet,sites_audience_interests_more likely,sites_audience_interests_interest_level\n')
 
+    f.write(
+        # ' +
+        'site link, category,keyword_opportunities_breakdown_optimization_opportunities,keyword_opportunities_breakdown_keyword_gaps,keyword_opportunities_breakdown_easy_to_rank_keywords,keyword_opportunities_breakdown_buyer_keywords,all_topics_keyword_gaps name, all_topics_keyword_gaps Avg traffic, all_topics_keyword_gaps search popularity ,all_topics_easy_to_rank_keywords name,all_topics_easy_to_rank_keywords relevance to site,all_topics_easy_to_rank_keywords search pop,all_topics_buyer_keywords name,all_topics_buyer_keywords Avg traffic,all_topics_buyer_keywords organic competition,all_topics_optimization_opportunities name,all_topics_optimization_opportunities search pop,all_topics_optimization_opportunities organic share of voice,all_topics_top_keywords name,all_topics_top_keywords search traffic,all_topics_top_keywords share of voice,comparison_metrics_search_traffic_this_site,comparison_metrics_search_traffic_Comp Avg,comparison_metrics_data_bounce_rate_this_site,comparison_metrics_data_bounce_rate_comp_avg,comparison_metrics_data_sites_linking_in_this_site,comparison_metrics_data_sites_linking_in_comp_avg,audience overlap sites overlap scores,audience overlap similar\n')
+
+
     # for i in range(0, 1):
     # all_sites_data.encode('utf-8')
     # print(all_sites_data[0][0][0])
@@ -119,6 +124,7 @@ def do_crawler_with_chromedrivers(my_urls, category):
     # print(all_sites_data[0][5][0])
     # print(all_sites_data[0][5][1])
     # print(all_sites_data[0][7][3])
+    driver.close()
 
     return all_sites_data
 
@@ -136,17 +142,27 @@ def get_sites_audience_interests(list_of_data, sites_audience_interests):
             while 'class="subText truncation"' in page_data[limit_for_crawl]:
                 each_category_depth = []
                 while '"truncation">' in page_data[limit_for_crawl + limit_for_depth_crawl]:
-                    row.append(page_data[limit_for_crawl + limit_for_depth_crawl].split('>')[1].split('<')[0])
-                    limit_for_depth_crawl += 1
-                    # print(limit_for_crawl + limit_for_depth_crawl)
-                    # each_category.append(row)
-                each_category.append(page_data[limit_for_crawl].split('truncation">')[1].split('<')[0])
-                each_category.append(page_data[limit_for_crawl + 32].split('>')[1].split('<')[0])
-                # print(each_category)
+                    try:
+                        row.append(str(page_data[limit_for_crawl + limit_for_depth_crawl].split('>')[1].split('<')[0]))
+                        limit_for_depth_crawl += 1
+                        # print(limit_for_crawl + limit_for_depth_crawl)
+                        # each_category.append(row)
+                    except:
+                        row.append('')
+                try:
+                    each_category.append(str(page_data[limit_for_crawl].split('truncation">')[1].split('<')[0]))
+                    # print(each_category)
+                except:
+                    each_category.append('')
+
+                try:
+                    each_category.append(str(page_data[limit_for_crawl + 32].split('>')[1].split('<')[0]))
+                except:
+                    each_category.append('')
                 if 'bar full' in page_data[limit_for_crawl + 5]:
                     try:
-                        each_category.append(page_data[limit_for_crawl + 13].split(
-                            '									        	                ')[1].split('  ')[0])
+                        each_category.append(str(page_data[limit_for_crawl + 13].split(
+                            '									        	                ')[1].split('  ')[0]))
                         # print(each_category)
                     except:
                         each_category.append('')
@@ -209,8 +225,8 @@ def get_referral_sites(list_of_data, referral_sites):
             while 'class="site' in page_data[limit_for_crawl]:
                 ############# changes ! #######################
                 try:
-                    row = [page_data[limit_for_crawl].split('class="truncation">')[1].split('<')[0],
-                           page_data[limit_for_crawl + 2].split('">')[1].split('<')[0]]
+                    row = [str(page_data[limit_for_crawl].split('class="truncation">')[1].split('<')[0]),
+                           str(page_data[limit_for_crawl + 2].split('">')[1].split('<')[0])]
                     limit_for_crawl += 6
                 except:
                     row = ['', '']
@@ -513,33 +529,34 @@ with open("sites.csv") as f:
 category = []
 my_urls = []
 
-which_line = 20
-j = 20
+# which_line = 180
+j = 740
 counter = j
-while counter < 27:
-    if all_sites[j][0] != 'bongacams.com' and all_sites[j][0] != 'fetlife.com' and all_sites[j][0] != 'liveleak.com' and \
-            all_sites[j][
-                0] != 'ebaumsworld.com' and all_sites[j][0] != 'iafd.com' and all_sites[j][0] != 'nudevista.com' and \
-            all_sites[j][
-                0] != 'adam4adam.com' and all_sites[j][0] != 'gfy.com' and all_sites[j][0] != 'nhentai.net' and \
-            all_sites[j][0] != 'cam4.com':
-        # print(all_sites[j][0])
-        # print(all_sites[j][1])
-        print(all_sites[j][0], str(all_sites[j][1]))
-        my_urls.append(all_sites[j][0])
-        category.append(all_sites[j][1])
-        try:
-            # print('https://www.alexa.com/siteinfo/' + str(all_sites[j][0]), str(all_sites[j][1]))
-            all_sites_data.append(do_crawler_with_chromedrivers('https://www.alexa.com/siteinfo/' + str(all_sites[j][0]),
-                                                                str(all_sites[j][1])))
-            which_line += 1
-            counter += 1
-        except:
-            print('not valid data' + '\n')
-        # print(all_sites_data[j][0])
-        print('counter in loop : ' + str(counter))
-        print('which line : ' + str(which_line))
-        # print(counter)
+print(all_sites)
+while counter < 748:
+    # if all_sites[j][0] != 'bongacams.com' and all_sites[j][0] != 'fetlife.com' and all_sites[j][0] != 'liveleak.com' and \
+    #         all_sites[j][
+    #             0] != 'ebaumsworld.com' and all_sites[j][0] != 'iafd.com' and all_sites[j][0] != 'nudevista.com' and \
+    #         all_sites[j][
+    #             0] != 'adam4adam.com' and all_sites[j][0] != 'gfy.com' and all_sites[j][0] != 'nhentai.net' and \
+    #         all_sites[j][0] != 'cam4.com':
+    # print(all_sites[j][0])
+    # print(all_sites[j][1])
+    print(all_sites[j][0], str(all_sites[j][1]))
+    my_urls.append(all_sites[j][0])
+    category.append(all_sites[j][1])
+    try:
+        # print('https://www.alexa.com/siteinfo/' + str(all_sites[j][0]), str(all_sites[j][1]))
+        all_sites_data.append(do_crawler_with_chromedrivers('https://www.alexa.com/siteinfo/' + str(all_sites[j][0]),
+                                                            str(all_sites[j][1])))
+        counter += 1
+        # which_line += 1
+    except:
+        print('not valid data' + '\n')
+    # print(all_sites_data[j][0])
+    print('counter in loop : ' + str(counter))
+    # print('which line : ' + str(which_line))
+    # print(counter)
     j += 1
     print('j out of lopp : ' + str(j))
     print(
@@ -552,16 +569,12 @@ print('end task 1')
 
 # f = open('data.csv', 'w+', encoding="utf-8", newline='')
 
-f = open('data.csv', 'a', encoding="utf-8")
-# site_data_2 = do_crawler_with_chromedrivers('https://www.alexa.com/siteinfo/facebook.com')
-# print(all_sites_data)
-# 
-# all_sites_data = all_sites_data[0]
-# print(all_sites_data[0])
+# f = open('data.csv', 'a', encoding="utf-8")
+f = open('data_V1.csv', 'a', encoding="utf-8")
 
-# f.write(
-#     # ' +
-#     'site link, category,keyword_opportunities_breakdown_optimization_opportunities,keyword_opportunities_breakdown_keyword_gaps,keyword_opportunities_breakdown_easy_to_rank_keywords,keyword_opportunities_breakdown_buyer_keywords,all_topics_keyword_gaps name, all_topics_keyword_gaps Avg traffic, all_topics_keyword_gaps search popularity ,all_topics_easy_to_rank_keywords name,all_topics_easy_to_rank_keywords relevance to site,all_topics_easy_to_rank_keywords search pop,all_topics_buyer_keywords name,all_topics_buyer_keywords Avg traffic,all_topics_buyer_keywords organic competition,all_topics_optimization_opportunities name,all_topics_optimization_opportunities search pop,all_topics_optimization_opportunities organic share of voice,all_topics_top_keywords name,all_topics_top_keywords search traffic,all_topics_top_keywords share of voice,comparison_metrics_search_traffic_this_site,comparison_metrics_search_traffic_Comp Avg,comparison_metrics_data_bounce_rate_this_site,comparison_metrics_data_bounce_rate_comp_avg,comparison_metrics_data_sites_linking_in_this_site,comparison_metrics_data_sites_linking_in_comp_avg,audience overlap sites overlap scores,audience overlap similar sites to this site,audience overlap alexa rank,alexa rank in 90 day trend in global internet engagement,alexa rank in 90 day trend daily time on site,traffic_source_site name,traffic_source_Percentage_overall_site_traffic,referral_sites_names,referral_sites_how_many_other_sites_drive_traffic_to_them,sites_audience_interests_internet,sites_audience_interests_more likely,sites_audience_interests_interest_level')
+f.write(
+    # ' +
+    'site link, category,keyword_opportunities_breakdown_optimization_opportunities,keyword_opportunities_breakdown_keyword_gaps,keyword_opportunities_breakdown_easy_to_rank_keywords,keyword_opportunities_breakdown_buyer_keywords,all_topics_keyword_gaps name, all_topics_keyword_gaps Avg traffic, all_topics_keyword_gaps search popularity ,all_topics_easy_to_rank_keywords name,all_topics_easy_to_rank_keywords relevance to site,all_topics_easy_to_rank_keywords search pop,all_topics_buyer_keywords name,all_topics_buyer_keywords Avg traffic,all_topics_buyer_keywords organic competition,all_topics_optimization_opportunities name,all_topics_optimization_opportunities search pop,all_topics_optimization_opportunities organic share of voice,all_topics_top_keywords name,all_topics_top_keywords search traffic,all_topics_top_keywords share of voice,comparison_metrics_search_traffic_this_site,comparison_metrics_search_traffic_Comp Avg,comparison_metrics_data_bounce_rate_this_site,comparison_metrics_data_bounce_rate_comp_avg,comparison_metrics_data_sites_linking_in_this_site,comparison_metrics_data_sites_linking_in_comp_avg,audience overlap sites overlap scores,audience overlap similar sites to this site,audience overlap alexa rank,alexa rank in 90 day trend in global internet engagement,alexa rank in 90 day trend daily time on site,traffic_source_site name,traffic_source_Percentage_overall_site_traffic,referral_sites_names,referral_sites_how_many_other_sites_drive_traffic_to_them,sites_audience_interests_internet,sites_audience_interests_more likely,sites_audience_interests_interest_level')
 # print('end task 2')
 
 # q = 8
@@ -570,88 +583,91 @@ f = open('data.csv', 'a', encoding="utf-8")
 
 for i in range(len(all_sites_data)):
     print('end task shit!')
-    f.write('\n' +
-            str(my_urls[i]) + ',' + str(category[i]) + ',' +
-            str(all_sites_data[i][0][0][1]) + ',' + str(all_sites_data[i][0][0][2]) + ',' + str(
-        all_sites_data[i][0][0][3]) + ',' + str(
-        all_sites_data[i][0][0][
-            4]) + ',' + str(
-        all_sites_data[i][0][1][0][0][0] + '&' + all_sites_data[i][0][1][0][1][0] + '&' + all_sites_data[i][0][1][0][2][
-            0] + '&' + all_sites_data[i][0][1][0][3][0]) + ',' + str(
-        all_sites_data[i][0][1][0][0][1] + '&' + all_sites_data[i][0][1][0][1][1] + '&' + all_sites_data[i][0][1][0][2][
-            1] + '&' + all_sites_data[i][0][1][0][3][
-            1]) + ',' + str(
-        all_sites_data[i][0][1][0][0][2] + '&' + all_sites_data[i][0][1][0][1][2] + '&' + all_sites_data[i][0][1][0][2][
-            2] + '&' + all_sites_data[i][0][1][0][3][
-            2]) + ',' + str(
-        all_sites_data[i][0][1][1][0][0] + '&' + all_sites_data[i][0][1][1][1][0] + '&' + all_sites_data[i][0][1][1][2][
-            0] + '&' + all_sites_data[i][0][1][1][3][
-            0]) + ',' + str(
-        all_sites_data[i][0][1][1][0][1] + '&' + all_sites_data[i][0][1][1][1][1] + '&' + all_sites_data[i][0][1][1][2][
-            1] + '&' + all_sites_data[i][0][1][1][3][
-            1]) + ',' + str(
-        all_sites_data[i][0][1][1][0][2] + '&' + all_sites_data[i][0][1][1][1][2] + '&' + all_sites_data[i][0][1][1][2][
-            2] + '&' + all_sites_data[i][0][1][1][3][
-            2]) + ',' + str(
-        all_sites_data[i][0][1][2][0][0] + '&' + all_sites_data[i][0][1][2][1][0] + '&' + all_sites_data[i][0][1][2][2][
-            0] + '&' + all_sites_data[i][0][1][2][3][
-            0]) + ',' + str(
-        all_sites_data[i][0][1][2][0][1] + '&' + all_sites_data[i][0][1][2][1][1] + '&' + all_sites_data[i][0][1][2][2][
-            1] + '&' + all_sites_data[i][0][1][2][3][
-            1]) + ',' + str(
-        all_sites_data[i][0][1][2][0][2] + '&' + all_sites_data[i][0][1][2][1][2] + '&' + all_sites_data[i][0][1][2][2][
-            2] + '&' + all_sites_data[i][0][1][2][3][
-            2]) + ',' + str(
-        all_sites_data[i][0][1][3][0][0] + '&' + all_sites_data[i][0][1][3][1][0] + '&' + all_sites_data[i][0][1][3][2][
-            0] + '&' + all_sites_data[i][0][1][3][3][
-            0]) + ',' + str(
-        all_sites_data[i][0][1][3][0][1] + '&' + all_sites_data[i][0][1][3][1][1] + '&' + all_sites_data[i][0][1][3][2][
-            1] + '&' + all_sites_data[i][0][1][3][3][
-            1]) + ',' + str(
-        all_sites_data[i][0][1][3][0][2] + '&' + all_sites_data[i][0][1][3][1][2] + '&' + all_sites_data[i][0][1][3][2][
-            2] + '&' + all_sites_data[i][0][1][3][3][
-            2]) + ',' + str(
-        all_sites_data[i][0][1][4][0][0] + '&' + all_sites_data[i][0][1][4][1][0] + '&' + all_sites_data[i][0][1][4][2][
-            0] + '&' + all_sites_data[i][0][1][4][3][
-            0] + '&' + all_sites_data[i][0][1][4][4][
-            0]) + ',' + str(
-        all_sites_data[i][0][1][4][0][1] + '&' + all_sites_data[i][0][1][4][1][1] + '&' + all_sites_data[i][0][1][4][2][
-            1] + '&' + all_sites_data[i][0][1][4][3][
-            1] + '&' + all_sites_data[i][0][1][4][4][
-            1]) + ',' + str(
-        all_sites_data[i][0][1][4][0][2] + '&' + all_sites_data[i][0][1][4][1][2] + '&' + all_sites_data[i][0][1][4][2][
-            2] + '&' + all_sites_data[i][0][1][4][3][
-            2] + '&' + all_sites_data[i][0][1][4][4][2])
-            + ',' + str(all_sites_data[i][0][2][0][0][0]) + ',' + str(all_sites_data[i][0][2][0][0][1]) + ',' + str(
-        all_sites_data[i][0][2][0][1][0]) + ',' + str(all_sites_data[i][0][2][0][1][1]) + ',' + str(
-        all_sites_data[i][0][2][0][2][0].replace(',', '')) + ',' + str(
-        all_sites_data[i][0][2][0][2][1].replace(',', '')) + ',' + str(
-        all_sites_data[i][0][3][0][0] + '&' + all_sites_data[i][0][3][0][1] + '&' + all_sites_data[i][0][3][0][
-            2] + '&' +
-        all_sites_data[i][0][3][0][3] + '&' + all_sites_data[i][0][3][0][4]) + ',' + str(
-        all_sites_data[i][0][3][1][0] + '&' + all_sites_data[i][0][3][1][1] + '&' + all_sites_data[i][0][3][1][
-            2] + '&' +
-        all_sites_data[i][0][3][1][3] + '&' + all_sites_data[i][0][3][1][4]) + ',' + str(
-        all_sites_data[i][0][3][2][0] + '&' + all_sites_data[i][0][3][2][1] + '&' + all_sites_data[i][0][3][2][
-            2] + '&' +
-        all_sites_data[i][0][3][2][3] + '&' + all_sites_data[i][0][3][2][4]) + ',' +
-            str(all_sites_data[i][0][4][0]) + ',' + str(all_sites_data[i][0][4][1]) + ',' + str(
-        all_sites_data[i][0][5][0][0] + '&' + all_sites_data[i][0][5][0][1] + '&' + all_sites_data[i][0][5][0][
-            2] + '&' +
-        all_sites_data[i][0][5][0][3] + '&' + all_sites_data[i][0][5][0][4]) + ',' + str(
-        all_sites_data[i][0][5][1][0] + '&' + all_sites_data[i][0][5][1][1] + '&' + all_sites_data[i][0][5][1][
-            2] + '&' +
-        all_sites_data[i][0][5][1][3] + '&' + all_sites_data[i][0][5][1][4]) + ',' + str(
-        all_sites_data[i][0][6][0][0] + '&' + all_sites_data[i][0][6][0][1] + '&' + all_sites_data[i][0][6][0][
-            2] + '&' +
-        all_sites_data[i][0][6][0][3] + '&' + all_sites_data[i][0][6][0][4]) + ',' + str(
-        all_sites_data[i][0][6][1][0] + '&' + all_sites_data[i][0][6][1][1] + '&' + all_sites_data[i][0][6][1][
-            2] + '&' +
-        all_sites_data[i][0][6][1][3] + '&' + all_sites_data[i][0][6][1][4]) + ',' + str(
-        all_sites_data[i][0][7][0][0] + '&' + all_sites_data[i][0][7][0][1]) + ',' + str(
-        all_sites_data[i][0][7][1][0] + '&' + all_sites_data[i][0][7][1][1]) + ',' + str(
-        all_sites_data[i][0][7][2][0] + '&' + all_sites_data[i][0][7][2][1]))
-    print('end task 3')
+    try:
+        f.write('\n' +
+                str(my_urls[i]) + ',' + str(category[i]) + ',' +
+                str(all_sites_data[i][0][0][1]) + ',' + str(all_sites_data[i][0][0][2]) + ',' + str(
+            all_sites_data[i][0][0][3]) + ',' + str(
+            all_sites_data[i][0][0][
+                4]) + ',' + str(
+            all_sites_data[i][0][1][0][0][0] + '&' + all_sites_data[i][0][1][0][1][0] + '&' + all_sites_data[i][0][1][0][2][
+                0] + '&' + all_sites_data[i][0][1][0][3][0]) + ',' + str(
+            all_sites_data[i][0][1][0][0][1] + '&' + all_sites_data[i][0][1][0][1][1] + '&' + all_sites_data[i][0][1][0][2][
+                1] + '&' + all_sites_data[i][0][1][0][3][
+                1]) + ',' + str(
+            all_sites_data[i][0][1][0][0][2] + '&' + all_sites_data[i][0][1][0][1][2] + '&' + all_sites_data[i][0][1][0][2][
+                2] + '&' + all_sites_data[i][0][1][0][3][
+                2]) + ',' + str(
+            all_sites_data[i][0][1][1][0][0] + '&' + all_sites_data[i][0][1][1][1][0] + '&' + all_sites_data[i][0][1][1][2][
+                0] + '&' + all_sites_data[i][0][1][1][3][
+                0]) + ',' + str(
+            all_sites_data[i][0][1][1][0][1] + '&' + all_sites_data[i][0][1][1][1][1] + '&' + all_sites_data[i][0][1][1][2][
+                1] + '&' + all_sites_data[i][0][1][1][3][
+                1]) + ',' + str(
+            all_sites_data[i][0][1][1][0][2] + '&' + all_sites_data[i][0][1][1][1][2] + '&' + all_sites_data[i][0][1][1][2][
+                2] + '&' + all_sites_data[i][0][1][1][3][
+                2]) + ',' + str(
+            all_sites_data[i][0][1][2][0][0] + '&' + all_sites_data[i][0][1][2][1][0] + '&' + all_sites_data[i][0][1][2][2][
+                0] + '&' + all_sites_data[i][0][1][2][3][
+                0]) + ',' + str(
+            all_sites_data[i][0][1][2][0][1] + '&' + all_sites_data[i][0][1][2][1][1] + '&' + all_sites_data[i][0][1][2][2][
+                1] + '&' + all_sites_data[i][0][1][2][3][
+                1]) + ',' + str(
+            all_sites_data[i][0][1][2][0][2] + '&' + all_sites_data[i][0][1][2][1][2] + '&' + all_sites_data[i][0][1][2][2][
+                2] + '&' + all_sites_data[i][0][1][2][3][
+                2]) + ',' + str(
+            all_sites_data[i][0][1][3][0][0] + '&' + all_sites_data[i][0][1][3][1][0] + '&' + all_sites_data[i][0][1][3][2][
+                0] + '&' + all_sites_data[i][0][1][3][3][
+                0]) + ',' + str(
+            all_sites_data[i][0][1][3][0][1] + '&' + all_sites_data[i][0][1][3][1][1] + '&' + all_sites_data[i][0][1][3][2][
+                1] + '&' + all_sites_data[i][0][1][3][3][
+                1]) + ',' + str(
+            all_sites_data[i][0][1][3][0][2] + '&' + all_sites_data[i][0][1][3][1][2] + '&' + all_sites_data[i][0][1][3][2][
+                2] + '&' + all_sites_data[i][0][1][3][3][
+                2]) + ',' + str(
+            all_sites_data[i][0][1][4][0][0] + '&' + all_sites_data[i][0][1][4][1][0] + '&' + all_sites_data[i][0][1][4][2][
+                0] + '&' + all_sites_data[i][0][1][4][3][
+                0] + '&' + all_sites_data[i][0][1][4][4][
+                0]) + ',' + str(
+            all_sites_data[i][0][1][4][0][1] + '&' + all_sites_data[i][0][1][4][1][1] + '&' + all_sites_data[i][0][1][4][2][
+                1] + '&' + all_sites_data[i][0][1][4][3][
+                1] + '&' + all_sites_data[i][0][1][4][4][
+                1]) + ',' + str(
+            all_sites_data[i][0][1][4][0][2] + '&' + all_sites_data[i][0][1][4][1][2] + '&' + all_sites_data[i][0][1][4][2][
+                2] + '&' + all_sites_data[i][0][1][4][3][
+                2] + '&' + all_sites_data[i][0][1][4][4][2])
+                + ',' + str(all_sites_data[i][0][2][0][0][0]) + ',' + str(all_sites_data[i][0][2][0][0][1]) + ',' + str(
+            all_sites_data[i][0][2][0][1][0]) + ',' + str(all_sites_data[i][0][2][0][1][1]) + ',' + str(
+            all_sites_data[i][0][2][0][2][0].replace(',', '')) + ',' + str(
+            all_sites_data[i][0][2][0][2][1].replace(',', '')) + ',' + str(
+            all_sites_data[i][0][3][0][0] + '&' + all_sites_data[i][0][3][0][1] + '&' + all_sites_data[i][0][3][0][
+                2] + '&' +
+            all_sites_data[i][0][3][0][3] + '&' + all_sites_data[i][0][3][0][4]) + ',' + str(
+            all_sites_data[i][0][3][1][0] + '&' + all_sites_data[i][0][3][1][1] + '&' + all_sites_data[i][0][3][1][
+                2] + '&' +
+            all_sites_data[i][0][3][1][3] + '&' + all_sites_data[i][0][3][1][4]) + ',' + str(
+            all_sites_data[i][0][3][2][0] + '&' + all_sites_data[i][0][3][2][1] + '&' + all_sites_data[i][0][3][2][
+                2] + '&' +
+            all_sites_data[i][0][3][2][3] + '&' + all_sites_data[i][0][3][2][4]) + ',' +
+                str(all_sites_data[i][0][4][0]) + ',' + str(all_sites_data[i][0][4][1]) + ',' + str(
+            all_sites_data[i][0][5][0][0] + '&' + all_sites_data[i][0][5][0][1] + '&' + all_sites_data[i][0][5][0][
+                2] + '&' +
+            all_sites_data[i][0][5][0][3] + '&' + all_sites_data[i][0][5][0][4]) + ',' + str(
+            all_sites_data[i][0][5][1][0] + '&' + all_sites_data[i][0][5][1][1] + '&' + all_sites_data[i][0][5][1][
+                2] + '&' +
+            all_sites_data[i][0][5][1][3] + '&' + all_sites_data[i][0][5][1][4]) + ',' + str(
+            all_sites_data[i][0][6][0][0] + '&' + all_sites_data[i][0][6][0][1] + '&' + all_sites_data[i][0][6][0][
+                2] + '&' +
+            all_sites_data[i][0][6][0][3] + '&' + all_sites_data[i][0][6][0][4]) + ',' + str(
+            all_sites_data[i][0][6][1][0] + '&' + all_sites_data[i][0][6][1][1] + '&' + all_sites_data[i][0][6][1][
+                2] + '&' +
+            all_sites_data[i][0][6][1][3] + '&' + all_sites_data[i][0][6][1][4]) + ',' + str(
+            all_sites_data[i][0][7][0][0] + '&' + all_sites_data[i][0][7][0][1]) + ',' + str(
+            all_sites_data[i][0][7][1][0] + '&' + all_sites_data[i][0][7][1][1]) + ',' + str(
+            all_sites_data[i][0][7][2][0] + '&' + all_sites_data[i][0][7][2][1]))
+        print('end task 3')
+    except:
+        print('Can not write to csv : ')
     # q += 1
 
 f.close()
@@ -661,7 +677,6 @@ print('end task 4')
 
 # except:
 #     print('error!')
-
 
 ########### be kar giri algorithm baraye shabih sazi kalamate moshabe bara kalamati ke eshtebah type shode va to data base hast
 ######### be kar giri algorithm lcs longest common subsequence #######################
