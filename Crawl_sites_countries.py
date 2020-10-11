@@ -11,7 +11,7 @@ from itertools import cycle
 
 
 
-def do_crawler_with_chromedrivers(my_urls):
+def Crawl_each_site(my_urls):
     # driver = webdriver.Chrome(
     #     executable_path=r"C:\Users\Ashkan\AppData\Local\Temp\chocolatey\chromedriver\79.0.3945.360\chromedriver.exe")
 

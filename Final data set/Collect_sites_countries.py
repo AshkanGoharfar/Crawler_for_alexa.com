@@ -1,27 +1,30 @@
-from Crawl_sites_countries
+from Crawl_sites_countries import *
 
-# changes !
-all_sites_data = []
 
-# all_sites = crawl_all_links()
+def site_name_country():
+    all_sites = []
+    with open("sites_countries.csv") as f:
+        lis = [line.split() for line in f]  # create a list of lists
+        fail_counter_1 = 0
+        for i, x in enumerate(lis):  # print the list items
+            if i > 0:
+                try:
+                    # print(str("line{0} = {1}".format(i, x).split(' = [\'')[1].split('\']')[0]).replace(',', ' ').split(' '))
 
-all_sites = []
-with open("sites_countries.csv") as f:
-    lis = [line.split() for line in f]  # create a list of lists
-    fail_counter_1 = 0
-    for i, x in enumerate(lis):  # print the list items
-        if i > 0:
-            try:
-                # print(str("line{0} = {1}".format(i, x).split(' = [\'')[1].split('\']')[0]).replace(',', ' ').split(' '))
+                    all_sites.append(
+                        str("line{0} = {1}".format(i, x).split(' = [\'')[1].split('\']')[0]).replace(',', ' ').split(
+                            ' '))
+                    # print(all_sites)
+                except:
+                    fail_counter_1 += 1
 
-                all_sites.append(
-                    str("line{0} = {1}".format(i, x).split(' = [\'')[1].split('\']')[0]).replace(',', ' ').split(' '))
-                # print(all_sites)
-            except:
-                fail_counter_1 += 1
+    return all_sites
+
 
 # print(all_sites)
 if __name__ == '__main__':
+    all_sites_data = []
+    all_sites = site_name_country()
     category = []
     my_urls = []
 
@@ -47,14 +50,10 @@ if __name__ == '__main__':
         category.append(all_sites[j][1])
         all_sites_data = []
         flag = 0
-        # for i in range(0, j - 1):
-        #     if all_sites[i][0] == all_sites[j][0]:
-        #         flag = 1
         if flag == 0:
             try:
                 # with Pool(10) as p:
-                all_sites_data = do_crawler_with_chromedrivers('https://www.alexa.com/siteinfo/' + str(all_sites[j][0]))
-                #     all_sites_data = do_crawler_with_chromedrivers('https://www.alexa.com/siteinfo/' + str(all_sites[j][0]))
+                all_sites_data = Crawl_each_site('https://www.alexa.com/siteinfo/' + str(all_sites[j][0]))
                 print('all site data: ' + str(all_sites_data))
                 print('counter in loop : ' + str(counter))
             except:
