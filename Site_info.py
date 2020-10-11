@@ -1,56 +1,58 @@
-import urllib.request
 from bs4 import BeautifulSoup
 from lxml import html
-import requests
+# import requests
 import datetime
 from datetime import timedelta, datetime
 from selenium import webdriver
 import random
 from itertools import cycle
+from multiprocessing import Pool
 
 
 # try:
-def get_api_from_alexa(my_urls):
-    try:
-        from lxml import etree
+# def get_api_from_alexa(my_urls):
+#     try:
+#         from lxml import etree
+#
+#         print("running with lxml.etree")
+#     except ImportError:
+#         try:
+#             # Python 2.5
+#             import xml.etree.cElementTree as etree
+#
+#             print("running with cElementTree on Python 2.5+")
+#         except ImportError:
+#             try:
+#                 # Python 2.5
+#                 import xml.etree.ElementTree as etree
+#
+#                 print("running with ElementTree on Python 2.5+")
+#             except ImportError:
+#                 try:
+#                     # normal cElementTree install
+#                     import cElementTree as etree
+#
+#                     print("running with cElementTree")
+#                 except ImportError:
+#                     try:
+#                         # normal ElementTree install
+#                         import elementtree.ElementTree as etree
+#
+#                         print("running with ElementTree")
+#                     except ImportError:
+#                         print("Failed to import ElementTree from any known place")
+#
+#     page = requests.get(my_urls)
+#     tree = html.fromstring(page.content)
 
-        print("running with lxml.etree")
-    except ImportError:
-        try:
-            # Python 2.5
-            import xml.etree.cElementTree as etree
 
-            print("running with cElementTree on Python 2.5+")
-        except ImportError:
-            try:
-                # Python 2.5
-                import xml.etree.ElementTree as etree
-
-                print("running with ElementTree on Python 2.5+")
-            except ImportError:
-                try:
-                    # normal cElementTree install
-                    import cElementTree as etree
-
-                    print("running with cElementTree")
-                except ImportError:
-                    try:
-                        # normal ElementTree install
-                        import elementtree.ElementTree as etree
-
-                        print("running with ElementTree")
-                    except ImportError:
-                        print("Failed to import ElementTree from any known place")
-
-    page = requests.get(my_urls)
-    tree = html.fromstring(page.content)
-
-
-def do_crawler_with_chromedrivers(my_urls, category):
+def do_crawler_with_chromedrivers(my_urls):
     # driver = webdriver.Chrome(
     #     executable_path=r"C:\Users\Ashkan\AppData\Local\Temp\chocolatey\chromedriver\79.0.3945.360\chromedriver.exe")
 
-    driver = webdriver.Chrome(executable_path=r"C:\ProgramData\chocolatey\bin\chromedriver.exe")
+    driver = webdriver.Chrome(executable_path=r"C:\ProgramData\chocolatey\lib-bad\chromedriver\tools\chromedriver.exe")
+
+    # driver = webdriver.Chrome(executable_path=r"C:\ProgramData\chocolatey\bin\chromedriver.exe")
     driver.get(my_urls)
     html = driver.page_source
     soup = BeautifulSoup(html)
@@ -75,23 +77,13 @@ def do_crawler_with_chromedrivers(my_urls, category):
     traffic_source = []
 
     # referral sites, Sites by how many other sites drive traffic to them
-    referral_sites = []
+    # referral_sites = []
 
     # internet, more likely, interest level, Sites in this category this site’s audience visits
-    sites_audience_interests = []
-    # it is just for facebook -> not google
+    # sites_audience_interests = []
     for tag in soup.find_all('div'):
         list_of_data.append(tag)
     # print(list_of_data[0])
-    # print(get_keyword_op_br(list_of_data, keyword_opportunities_breakdown),
-    #              get_all_topics(list_of_data, all_topics),
-    #              get_comparison_metrics(list_of_data, comparison_metrics_data),
-    #              get_audience_overlap(list_of_data, audience_overlap),
-    #              get_alexa_rank_90_days_trend(list_of_data, alexa_rank_90_days_trend),
-    #              get_traffic_source(list_of_data, traffic_source),
-    #              get_referral_sites(list_of_data, referral_sites),
-    #              get_sites_audience_interests(list_of_data, sites_audience_interests))
-
     # full_data = [get_keyword_op_br(list_of_data, keyword_opportunities_breakdown),
     #              get_all_topics(list_of_data, all_topics),
     #              get_comparison_metrics(list_of_data, comparison_metrics_data),
@@ -110,38 +102,15 @@ def do_crawler_with_chromedrivers(my_urls, category):
         b = get_all_topics(list_of_data, all_topics)
         c = get_comparison_metrics(list_of_data, comparison_metrics_data)
         d = get_audience_overlap(list_of_data, audience_overlap)
-        print('get_keyword_op_br' + str(a))
-        print('get_all_topics' + str(b))
-        print('get_comparison_metrics' + str(c))
-        print('get_audience_overlap' + str(d))
+        print('get_keyword_op_br : ' + str(a))
+        print('get_all_topics : ' + str(b))
+        print('get_comparison_metrics : ' + str(c))
+        print('get_audience_overlap : ' + str(d))
         full_data = [a, b, c, d]
-
-        # print(full_data)
-        # if my_urls == 'https://www.alexa.com/siteinfo/google.com':
-        #     google_data = [full_data]
-        # elif my_urls == 'https://www.alexa.com/siteinfo/facebook.com':
         all_sites_data = [full_data]
-        # print(all_sites_data)
-        # f = open('data.csv', 'w+', encoding="utf-8")
-        # site_data_2 = do_crawler_with_chromedrivers('https://www.alexa.com/siteinfo/facebook.com')
-        # f.write(
-        #     # ' +
-        #     'site link, category,keyword_opportunities_breakdown_optimization_opportunities,keyword_opportunities_breakdown_keyword_gaps,keyword_opportunities_breakdown_easy_to_rank_keywords,keyword_opportunities_breakdown_buyer_keywords,all_topics_keyword_gaps name, all_topics_keyword_gaps Avg traffic, all_topics_keyword_gaps search popularity ,all_topics_easy_to_rank_keywords name,all_topics_easy_to_rank_keywords relevance to site,all_topics_easy_to_rank_keywords search pop,all_topics_buyer_keywords name,all_topics_buyer_keywords Avg traffic,all_topics_buyer_keywords organic competition,all_topics_optimization_opportunities name,all_topics_optimization_opportunities search pop,all_topics_optimization_opportunities organic share of voice,all_topics_top_keywords name,all_topics_top_keywords search traffic,all_topics_top_keywords share of voice,comparison_metrics_search_traffic_this_site,comparison_metrics_search_traffic_Comp Avg,comparison_metrics_data_bounce_rate_this_site,comparison_metrics_data_bounce_rate_comp_avg,comparison_metrics_data_sites_linking_in_this_site,comparison_metrics_data_sites_linking_in_comp_avg,audience overlap sites overlap scores,audience overlap similar sites to this site,audience overlap alexa rank,alexa rank in 90 day trend in global internet engagement,alexa rank in 90 day trend daily time on site,traffic_source_site name,traffic_source_Percentage_overall_site_traffic,referral_sites_names,referral_sites_how_many_other_sites_drive_traffic_to_them,sites_audience_interests_internet,sites_audience_interests_more likely,sites_audience_interests_interest_level\n')
-
-        # f.write(
-        #     # ' +
-        #     'site link, category,keyword_opportunities_breakdown_optimization_opportunities,keyword_opportunities_breakdown_keyword_gaps,keyword_opportunities_breakdown_easy_to_rank_keywords,keyword_opportunities_breakdown_buyer_keywords,all_topics_keyword_gaps name, all_topics_keyword_gaps Avg traffic, all_topics_keyword_gaps search popularity ,all_topics_easy_to_rank_keywords name,all_topics_easy_to_rank_keywords relevance to site,all_topics_easy_to_rank_keywords search pop,all_topics_buyer_keywords name,all_topics_buyer_keywords Avg traffic,all_topics_buyer_keywords organic competition,all_topics_optimization_opportunities name,all_topics_optimization_opportunities search pop,all_topics_optimization_opportunities organic share of voice,all_topics_top_keywords name,all_topics_top_keywords search traffic,all_topics_top_keywords share of voice,comparison_metrics_search_traffic_this_site,comparison_metrics_search_traffic_Comp Avg,comparison_metrics_data_bounce_rate_this_site,comparison_metrics_data_bounce_rate_comp_avg,comparison_metrics_data_sites_linking_in_this_site,comparison_metrics_data_sites_linking_in_comp_avg,audience overlap sites overlap scores,audience overlap similar\n')
-
-        # for i in range(0, 1):
-        # all_sites_data.encode('utf-8')
-        # print(all_sites_data[0][0][0])
-        # print(all_sites_data[0][7])
-        # print(all_sites_data[0][2][0][2][0])
-        # print(all_sites_data[0][5][0])
-        # print(all_sites_data[0][5][1])
-        # print(all_sites_data[0][7][3])
         driver.close()
     except:
+        print('ok----1')
         driver.close()
 
     return all_sites_data
@@ -361,44 +330,6 @@ def do_crawler_with_chromedrivers(my_urls, category):
 
 
 def get_audience_overlap(list_of_data, audience_overlap):
-    # page_data = str(list_of_data[0]).split('\n')
-    # current_position = 0
-    # for item in page_data:
-    #     limit_for_crawl = current_position
-    #     each_category = []
-    #     if '<div class="overlap" data-index="0"' in page_data[limit_for_crawl]:
-    #         print('ok--5')
-    #         while '<div class="overlap" data-index="' in page_data[limit_for_crawl]:
-    #             print('ok--5')
-    #             row = [page_data[limit_for_crawl + 1].split('">')[1].split('<')[0],
-    #                    page_data[limit_for_crawl + 4].split('">')[1].split('<')[0],
-    #                    page_data[limit_for_crawl + 7].split('">')[1].split('<')[0]]
-    #             limit_for_crawl += 11
-    #             each_category.append(row)
-    #             print('each_category' + str(each_category))
-    #         audience_overlap.append(each_category)
-    #         print('audience overlap' + str(audience_overlap))
-    #     current_position += 1
-    #     audience_overlap_percent = []
-    #     audience_overlap_site_name = []
-    #     # audience_overlap_rank = []
-    # # print(audience_overlap[0][0])
-    # # else:
-    #
-    #     for i in range(len(audience_overlap[0])):
-    #         try:
-    #             audience_overlap_percent.append(audience_overlap[0][i][0])
-    #             audience_overlap_site_name.append(audience_overlap[0][i][1])
-    #             # audience_overlap_rank.append(audience_overlap[0][i][2])
-    #         except:
-    #             audience_overlap_percent.append('null')
-    #             audience_overlap_site_name.append('null')
-    #             # audience_overlap_rank.append('null')
-    #
-    # audience_overlap = []
-    # audience_overlap.append(audience_overlap_percent)
-    # audience_overlap.append(audience_overlap_site_name)
-    #     # audience_overlap.append(audience_overlap_rank)
     page_data = str(list_of_data[0]).split('\n')
     try:
         current_position = 0
@@ -431,9 +362,6 @@ def get_audience_overlap(list_of_data, audience_overlap):
         audience_overlap = []
         audience_overlap.append(audience_overlap_percent)
         audience_overlap.append(audience_overlap_site_name)
-        # print('audience_overlap :' + str(audience_overlap))
-        # if len(audience_overlap) == 0:
-        #     audience_overlap = [['null', 'null', 'null', 'null', 'null'], ['null', 'null', 'null', 'null', 'null']]
         if len(audience_overlap[0]) == 1:
             audience_overlap = [[audience_overlap[0][0], 'null', 'null', 'null', 'null'],
                                 [audience_overlap[1][0], 'null', 'null', 'null', 'null']]
@@ -452,7 +380,6 @@ def get_audience_overlap(list_of_data, audience_overlap):
                  'null']]
     except:
         audience_overlap = [['null', 'null', 'null', 'null', 'null'], ['null', 'null', 'null', 'null', 'null']]
-
     return audience_overlap
 
 
@@ -478,7 +405,6 @@ def get_comparison_metrics(list_of_data, comparison_metrics_data):
                             row = ['null', 'null']
                     elif '<h3>Similar Sites by Audience Overlap</h3>' in page_data[
                         limit_for_crawl + 60]:
-                        # print("ok")
                         # print(page_data[limit_for_crawl + 36], page_data[limit_for_crawl + 47])
                         try:
                             row = [page_data[limit_for_crawl + 36].split('<span>')[1].split('<')[0],
@@ -492,28 +418,16 @@ def get_comparison_metrics(list_of_data, comparison_metrics_data):
                 comparison_metrics_data.append(each_category)
 
             current_position += 1
-        # if comparison_metrics_data[0] == comparison_metrics_data[1]:
-        #     del comparison_metrics_data[1]
-        # print('comparison_metrics_data :' + str(comparison_metrics_data))
         if len(comparison_metrics_data) == 0:
             comparison_metrics_data = [[['null', 'null'], ['null', 'null'], ['null', 'null']]]
-        elif len(comparison_metrics_data) == 1:
+        elif len(comparison_metrics_data[0]) == 1:
             comparison_metrics_data = [[comparison_metrics_data[0][0], ['null', 'null'], ['null', 'null']]]
-        elif len(comparison_metrics_data) == 2:
+        elif len(comparison_metrics_data[0]) == 2:
             comparison_metrics_data = [[comparison_metrics_data[0][0], comparison_metrics_data[0][1], ['null', 'null']]]
     except:
         comparison_metrics_data = [[['null', 'null'], ['null', 'null'], ['null', 'null']]]
-    # if counter == 1:
-    #     comparison_metrics_data = [[comparison_metrics_data[0][0], ['null', 'null'], ['null', 'null']]]
-    # elif counter == 2:
-    #     comparison_metrics_data = [[comparison_metrics_data[0][0], comparison_metrics_data[0][1], ['null', 'null']]]
-    # a = [[['null', 'null']], ['null', 'null'], ['null', 'null']]
     # print('final comparison_metrics_data : ' + str(comparison_metrics_data))
     return comparison_metrics_data
-
-
-# city,name,id,KEYWORD OPPORTUNITIES BREAKDOWN-optimi
-# 3,tehran,2,278
 
 
 def get_keyword_op_br(list_of_data, keyword_opportunities_breakdown):
@@ -625,6 +539,17 @@ def get_all_topics(list_of_data, all_topics):
                            ['null', 'null', 'null']],
                           [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'],
                            ['null', 'null', 'null']]]
+        elif len(all_topics) == 0:
+            all_topics = [[['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'],
+                           ['null', 'null', 'null']],
+                          [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'],
+                           ['null', 'null', 'null']],
+                          [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'],
+                           ['null', 'null', 'null']],
+                          [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'],
+                           ['null', 'null', 'null']],
+                          [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'],
+                           ['null', 'null', 'null']]]
     except:
         all_topics = [[['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'],
                        ['null', 'null', 'null']],
@@ -636,66 +561,10 @@ def get_all_topics(list_of_data, all_topics):
                        ['null', 'null', 'null']],
                       [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'],
                        ['null', 'null', 'null']]]
-
-        # print('ok-6')
-    # if len(all_topics[0]) == 3:
-    #     all_topics[0] = [all_topics[0][0], all_topics[0][1], all_topics[0][2], ['null', 'null', 'null']]
-    #     print(str(all_topics[0]))
-    # # print(str(all_topics))
-    # if len(all_topics[0]) < 3:
-    #     all_topics[0] = [all_topics[0][0], all_topics[0][1], ['null', 'null', 'null'], ['null', 'null', 'null']]
-    #     print('ok--1')
-
     # print('all real topics :' + str(all_topics))
     return all_topics
 
 
-# def write_in_data_csv():
-
-# do_crawler_with_chromedrivers('https://www.alexa.com/siteinfo/google.com')
-# get_api_from_alexa('https://www.alexa.com/siteinfo/google.com')
-
-######################################################################################
-######################################################################################
-# def crawl_all_links():
-#     driver = webdriver.Chrome(executable_path=r"C:\ProgramData\chocolatey\bin\chromedriver.exe")
-#     driver.get('https://www.alexa.com/topsites/category')
-#     html = driver.page_source
-#     soup = BeautifulSoup(html)
-#     list_of_data = []
-#     for tag in soup.find_all('div'):
-#         list_of_data.append(tag)
-#     links = []
-#     # full_data = [links]
-#     tags = []
-#     # print(list_of_data[0])
-#     for item in str(list_of_data[0]).split('\n'):
-#         if 'li><a href="/topsites/category/Top/' in item:
-#             links.append(item.split('">')[1].split('<')[0])
-#     sites_and_categories = []
-#     for element in links:
-#         driver = webdriver.Chrome(executable_path=r"C:\ProgramData\chocolatey\bin\chromedriver.exe")
-#         url = 'https://www.alexa.com/topsites/category/Top/' + str(element)
-#         driver.get(url)
-#         html = driver.page_source
-#         soup = BeautifulSoup(html)
-#         list_of_data = []
-#         for tag in soup.find_all('div'):
-#             list_of_data.append(tag)
-#         # get_direct_links(element, url)
-#         same_category = []
-#         for item in str(list_of_data[0]).split('\n'):
-#             site_data = []
-#             if '<a href="/siteinfo/' in item:
-#                 site_name = item.split('fo/')[1].split('">')[0]
-#                 site_data = [site_name, url]
-#                 sites_and_categories.append(site_data)
-#     # print(sites_and_categories)
-#     return sites_and_categories
-######################################################################################
-######################################################################################
-
-# changes !
 all_sites_data = []
 
 # all_sites = crawl_all_links()
@@ -717,135 +586,152 @@ with open("Categories.csv") as f:
                 # print('get all site data fail counter : ' + str(fail_counter_1))
                 # print('list index out of range !!!!!!!!!!!!!')
 
-# print(all_sites)
+# def execute_multi_proccessing(my_urls):
+if __name__ == '__main__':
+    category = []
+    my_urls = []
 
-category = []
-my_urls = []
+    # f = open('data_V3.csv', 'w+', encoding="utf-8")
+    #
+    # f.write(
+    #     # ' +
+    #     'site link, category,keyword_opportunities_breakdown_optimization_opportunities,keyword_opportunities_breakdown_keyword_gaps,keyword_opportunities_breakdown_easy_to_rank_keywords,keyword_opportunities_breakdown_buyer_keywords,all_topics_keyword_gaps name, all_topics_keyword_gaps Avg traffic, all_topics_keyword_gaps search popularity ,all_topics_easy_to_rank_keywords name,all_topics_easy_to_rank_keywords relevance to site,all_topics_easy_to_rank_keywords search pop,all_topics_buyer_keywords name,all_topics_buyer_keywords Avg traffic,all_topics_buyer_keywords organic competition,all_topics_optimization_opportunities name,all_topics_optimization_opportunities search pop,all_topics_optimization_opportunities organic share of voice,all_topics_top_keywords name,all_topics_top_keywords search traffic,all_topics_top_keywords share of voice,comparison_metrics_search_traffic_this_site,comparison_metrics_search_traffic_Comp Avg,comparison_metrics_data_bounce_rate_this_site,comparison_metrics_data_bounce_rate_comp_avg,comparison_metrics_data_sites_linking_in_this_site,comparison_metrics_data_sites_linking_in_comp_avg,audience overlap sites overlap scores,audience overlap similar sites to this site')
+    # f.close()
 
-f = open('data_V_test.csv', 'w+', encoding="utf-8")
+    # which_line = 180
+    # print(all_sites)
+    failed_counter = 0
+    success_counter = 0
 
-f.write(
-    # ' +
-    'site link, category,keyword_opportunities_breakdown_optimization_opportunities,keyword_opportunities_breakdown_keyword_gaps,keyword_opportunities_breakdown_easy_to_rank_keywords,keyword_opportunities_breakdown_buyer_keywords,all_topics_keyword_gaps name, all_topics_keyword_gaps Avg traffic, all_topics_keyword_gaps search popularity ,all_topics_easy_to_rank_keywords name,all_topics_easy_to_rank_keywords relevance to site,all_topics_easy_to_rank_keywords search pop,all_topics_buyer_keywords name,all_topics_buyer_keywords Avg traffic,all_topics_buyer_keywords organic competition,all_topics_optimization_opportunities name,all_topics_optimization_opportunities search pop,all_topics_optimization_opportunities organic share of voice,all_topics_top_keywords name,all_topics_top_keywords search traffic,all_topics_top_keywords share of voice,comparison_metrics_search_traffic_this_site,comparison_metrics_search_traffic_Comp Avg,comparison_metrics_data_bounce_rate_this_site,comparison_metrics_data_bounce_rate_comp_avg,comparison_metrics_data_sites_linking_in_this_site,comparison_metrics_data_sites_linking_in_comp_avg,audience overlap sites overlap scores,audience overlap similar sites to this site')
-f.close()
-
-# which_line = 180
-j = 1596
-counter = j
-# print(all_sites)
-failed_counter = 0
-success_counter = 0
-while counter < 1610:
-    f = open('data_V_test.csv', 'a', encoding="utf-8")
-    print(all_sites[j][0], str(all_sites[j][1]))
-    my_urls.append(all_sites[j][0])
-    category.append(all_sites[j][1])
-    all_sites_data = []
-    try:
-        all_sites_data = do_crawler_with_chromedrivers('https://www.alexa.com/siteinfo/' + str(all_sites[j][0]),
-                                                       str(all_sites[j][1]))
+    failed_in_execute = 0
+    j = 9800
+    counter = j
+    while counter < 11000:
+        f = open('data_V3.csv', 'a', encoding="utf-8")
+        print(all_sites[j][0], str(all_sites[j][1]))
+        my_urls.append(all_sites[j][0])
+        category.append(all_sites[j][1])
+        all_sites_data = []
+        # try:
+        
+        with Pool(10) as p:
+            all_sites_data = p.map(do_crawler_with_chromedrivers,
+                                   'https://www.alexa.com/siteinfo/' + str(all_sites[j][0]))
+            #     all_sites_data = do_crawler_with_chromedrivers('https://www.alexa.com/siteinfo/' + str(all_sites[j][0]))
         counter += 1
-
-    # all_sites_data = [all_sites_data]
-    # which_line += 1
-    except:
+        # except:
         print('not valid data' + '\n')
-    print('all site data: ' + str(all_sites_data))
-    print('counter in loop : ' + str(counter))
+        failed_in_execute += 1
+        print('failed in execute : ' + str(failed_in_execute))
+        print('all site data: ' + str(all_sites_data))
+        print('counter in loop : ' + str(counter))
+        # print('all sites' + all_sites_data[0][0])
+        full_null_data = [[['null', 'null', 'null', 'null'], [
+            [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null']],
+            [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null']],
+            [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null']],
+            [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null']],
+            [['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'], ['null', 'null', 'null'],
+             ['null', 'null', 'null']]], [[['null', 'null'], ['null', 'null'], ['null', 'null']]],
+                           [['null', 'null', 'null', 'null', 'null'], ['null', 'null', 'null', 'null', 'null']]]]
+        try:
+            if all_sites_data is not full_null_data:
+                f.write('\n' +
+                        str(all_sites[j][0]) + ',' + str(all_sites[j][1]) + ',' +
+                        str(all_sites_data[0][0][0]) + ',' + str(all_sites_data[0][0][1]) + ',' + str(
+                    all_sites_data[0][0][2]) + ',' + str(
+                    all_sites_data[0][0][3]) + ',' + str(
+                    all_sites_data[0][1][0][0][0] + '&' + all_sites_data[0][1][0][1][0] + '&' +
+                    all_sites_data[0][1][0][2][
+                        0] + '&' + all_sites_data[0][1][0][3][0]) + ',' + str(
+                    all_sites_data[0][1][0][0][1] + '&' + all_sites_data[0][1][0][1][1] + '&' +
+                    all_sites_data[0][1][0][2][
+                        1] + '&' + all_sites_data[0][1][0][3][
+                        1]) + ',' + str(
+                    all_sites_data[0][1][0][0][2] + '&' + all_sites_data[0][1][0][1][2] + '&' +
+                    all_sites_data[0][1][0][2][
+                        2] + '&' + all_sites_data[0][1][0][3][
+                        2]) + ',' + str(
+                    all_sites_data[0][1][1][0][0] + '&' + all_sites_data[0][1][1][1][0] + '&' +
+                    all_sites_data[0][1][1][2][
+                        0] + '&' + all_sites_data[0][1][1][3][
+                        0]) + ',' + str(
+                    all_sites_data[0][1][1][0][1] + '&' + all_sites_data[0][1][1][1][1] + '&' +
+                    all_sites_data[0][1][1][2][
+                        1] + '&' + all_sites_data[0][1][1][3][
+                        1]) + ',' + str(
+                    all_sites_data[0][1][1][0][2] + '&' + all_sites_data[0][1][1][1][2] + '&' +
+                    all_sites_data[0][1][1][2][
+                        2] + '&' + all_sites_data[0][1][1][3][
+                        2]) + ',' + str(
+                    all_sites_data[0][1][2][0][0] + '&' + all_sites_data[0][1][2][1][0] + '&' +
+                    all_sites_data[0][1][2][2][
+                        0] + '&' + all_sites_data[0][1][2][3][
+                        0]) + ',' + str(
+                    all_sites_data[0][1][2][0][1] + '&' + all_sites_data[0][1][2][1][1] + '&' +
+                    all_sites_data[0][1][2][2][
+                        1] + '&' + all_sites_data[0][1][2][3][
+                        1]) + ',' + str(
+                    all_sites_data[0][1][2][0][2] + '&' + all_sites_data[0][1][2][1][2] + '&' +
+                    all_sites_data[0][1][2][2][
+                        2] + '&' + all_sites_data[0][1][2][3][
+                        2]) + ',' + str(
+                    all_sites_data[0][1][3][0][0] + '&' + all_sites_data[0][1][3][1][0] + '&' +
+                    all_sites_data[0][1][3][2][
+                        0] + '&' + all_sites_data[0][1][3][3][
+                        0]) + ',' + str(
+                    all_sites_data[0][1][3][0][1] + '&' + all_sites_data[0][1][3][1][1] + '&' +
+                    all_sites_data[0][1][3][2][
+                        1] + '&' + all_sites_data[0][1][3][3][
+                        1]) + ',' + str(
+                    all_sites_data[0][1][3][0][2] + '&' + all_sites_data[0][1][3][1][2] + '&' +
+                    all_sites_data[0][1][3][2][
+                        2] + '&' + all_sites_data[0][1][3][3][
+                        2]) + ',' + str(
+                    all_sites_data[0][1][4][0][0] + '&' + all_sites_data[0][1][4][1][0] + '&' +
+                    all_sites_data[0][1][4][2][
+                        0] + '&' + all_sites_data[0][1][4][3][
+                        0]) + ',' + str(
+                    all_sites_data[0][1][4][0][1] + '&' + all_sites_data[0][1][4][1][1] + '&' +
+                    all_sites_data[0][1][4][2][
+                        1] + '&' + all_sites_data[0][1][4][3][
+                        1]) + ',' + str(
+                    all_sites_data[0][1][4][0][2] + '&' + all_sites_data[0][1][4][1][2] + '&' +
+                    all_sites_data[0][1][4][2][
+                        2] + '&' + all_sites_data[0][1][4][3][
+                        2])
+                        + ',' + str(all_sites_data[0][2][0][0][0]) + ',' + str(
+                    all_sites_data[0][2][0][0][1]) + ',' + str(
+                    all_sites_data[0][2][0][1][0]) + ',' + str(all_sites_data[0][2][0][1][1]) + ',' + str(
+                    all_sites_data[0][2][0][2][0].replace(',', '')) + ',' + str(
+                    all_sites_data[0][2][0][2][1].replace(',', '')) + ',' + str(
+                    all_sites_data[0][3][0][0] + '&' + all_sites_data[0][3][0][1] + '&' + all_sites_data[0][3][0][
+                        2] + '&' +
+                    all_sites_data[0][3][0][3] + '&' + all_sites_data[0][3][0][4]) + ',' + str(
+                    all_sites_data[0][3][1][0] + '&' + all_sites_data[0][3][1][1] + '&' + all_sites_data[0][3][1][
+                        2] + '&' +
+                    all_sites_data[0][3][1][3] + '&' + all_sites_data[0][3][1][4]))
+                print('Write to csv successfuly')
+        except:
+            print('can not write to csv file !')
+            failed_counter += 1
+            print('Write to csv fail_counter : ' + str(failed_counter))
 
-    # print('lists problem : ')
-    # print('all sites' + all_sites_data[0][0])
-    # print(all_sites_data[0][1][4][3][2])
-    # print(all_sites_data[0][3][1][4])
-    # print(all_sites_data[0][1][4][3][2])
-    # print(all_sites_data[0][3][0][1])
-    # print(all_sites_data[0][2][0][1][0])
-    # print('fucking error : ' + str(all_sites_data[0][3][0]))
-    # print('fucking error 0 : ' + all_sites_data[0][1][0][0][0])
-    # print('fucking error 1 : ' + all_sites_data[0][1][0][1][0])
-    # print('fucking error 2 : ' + all_sites_data[0][1][0][2][0])
-    # print('fucking error 3 : ' + str(all_sites_data[0][1][0][3][0]))
-    try:
-        f.write('\n' +
-                str(all_sites[j][0]) + ',' + str(all_sites[j][1]) + ',' +
-                str(all_sites_data[0][0][0]) + ',' + str(all_sites_data[0][0][1]) + ',' + str(
-            all_sites_data[0][0][2]) + ',' + str(
-            all_sites_data[0][0][3]) + ',' + str(
-            all_sites_data[0][1][0][0][0] + '&' + all_sites_data[0][1][0][1][0] + '&' + all_sites_data[0][1][0][2][
-                0] + '&' + all_sites_data[0][1][0][3][0]) + ',' + str(
-            all_sites_data[0][1][0][0][1] + '&' + all_sites_data[0][1][0][1][1] + '&' + all_sites_data[0][1][0][2][
-                1] + '&' + all_sites_data[0][1][0][3][
-                1]) + ',' + str(
-            all_sites_data[0][1][0][0][2] + '&' + all_sites_data[0][1][0][1][2] + '&' + all_sites_data[0][1][0][2][
-                2] + '&' + all_sites_data[0][1][0][3][
-                2]) + ',' + str(
-            all_sites_data[0][1][1][0][0] + '&' + all_sites_data[0][1][1][1][0] + '&' + all_sites_data[0][1][1][2][
-                0] + '&' + all_sites_data[0][1][1][3][
-                0]) + ',' + str(
-            all_sites_data[0][1][1][0][1] + '&' + all_sites_data[0][1][1][1][1] + '&' + all_sites_data[0][1][1][2][
-                1] + '&' + all_sites_data[0][1][1][3][
-                1]) + ',' + str(
-            all_sites_data[0][1][1][0][2] + '&' + all_sites_data[0][1][1][1][2] + '&' + all_sites_data[0][1][1][2][
-                2] + '&' + all_sites_data[0][1][1][3][
-                2]) + ',' + str(
-            all_sites_data[0][1][2][0][0] + '&' + all_sites_data[0][1][2][1][0] + '&' + all_sites_data[0][1][2][2][
-                0] + '&' + all_sites_data[0][1][2][3][
-                0]) + ',' + str(
-            all_sites_data[0][1][2][0][1] + '&' + all_sites_data[0][1][2][1][1] + '&' + all_sites_data[0][1][2][2][
-                1] + '&' + all_sites_data[0][1][2][3][
-                1]) + ',' + str(
-            all_sites_data[0][1][2][0][2] + '&' + all_sites_data[0][1][2][1][2] + '&' + all_sites_data[0][1][2][2][
-                2] + '&' + all_sites_data[0][1][2][3][
-                2]) + ',' + str(
-            all_sites_data[0][1][3][0][0] + '&' + all_sites_data[0][1][3][1][0] + '&' + all_sites_data[0][1][3][2][
-                0] + '&' + all_sites_data[0][1][3][3][
-                0]) + ',' + str(
-            all_sites_data[0][1][3][0][1] + '&' + all_sites_data[0][1][3][1][1] + '&' + all_sites_data[0][1][3][2][
-                1] + '&' + all_sites_data[0][1][3][3][
-                1]) + ',' + str(
-            all_sites_data[0][1][3][0][2] + '&' + all_sites_data[0][1][3][1][2] + '&' + all_sites_data[0][1][3][2][
-                2] + '&' + all_sites_data[0][1][3][3][
-                2]) + ',' + str(
-            all_sites_data[0][1][4][0][0] + '&' + all_sites_data[0][1][4][1][0] + '&' + all_sites_data[0][1][4][2][
-                0] + '&' + all_sites_data[0][1][4][3][
-                0]) + ',' + str(
-            all_sites_data[0][1][4][0][1] + '&' + all_sites_data[0][1][4][1][1] + '&' + all_sites_data[0][1][4][2][
-                1] + '&' + all_sites_data[0][1][4][3][
-                1]) + ',' + str(
-            all_sites_data[0][1][4][0][2] + '&' + all_sites_data[0][1][4][1][2] + '&' + all_sites_data[0][1][4][2][
-                2] + '&' + all_sites_data[0][1][4][3][
-                2])
-                + ',' + str(all_sites_data[0][2][0][0][0]) + ',' + str(all_sites_data[0][2][0][0][1]) + ',' + str(
-            all_sites_data[0][2][0][1][0]) + ',' + str(all_sites_data[0][2][0][1][1]) + ',' + str(
-            all_sites_data[0][2][0][2][0].replace(',', '')) + ',' + str(
-            all_sites_data[0][2][0][2][1].replace(',', '')) + ',' + str(
-            all_sites_data[0][3][0][0] + '&' + all_sites_data[0][3][0][1] + '&' + all_sites_data[0][3][0][
-                2] + '&' +
-            all_sites_data[0][3][0][3] + '&' + all_sites_data[0][3][0][4]) + ',' + str(
-            all_sites_data[0][3][1][0] + '&' + all_sites_data[0][3][1][1] + '&' + all_sites_data[0][3][1][
-                2] + '&' +
-            all_sites_data[0][3][1][3] + '&' + all_sites_data[0][3][1][4]))
-        print('Write to csv successfuly')
-    except:
-        print('can not write to csv file !')
-        failed_counter += 1
+        j += 1
+        print('j out of loop : ' + str(j))
+        f.close()
+        print('file closed')
 
-    j += 1
-    print('j out of lopp : ' + str(j))
-    f.close()
-    print('file closed')
-    print(fail_counter_1)
-    print(
-        '______________________________________________________________________________________________________________________________________________________________________________________')
-    # print('j out of loop : ' + str(j))
+        print(
+            '______________________________________________________________________________________________________________________________________________________________________________________')
+        # print('j out of loop : ' + str(j))
 
-print('end task 1')
+    print('end task 1')
+    print(failed_counter)
+    print('end task 4')
 
-print(failed_counter)
-# f = open('data.csv', 'a', encoding="utf-8")
-# f = open('data_V1.csv', 'a', encoding="utf-8")
-
-print('end task 4')
-
+# with Pool(10) as p:
+#     records = p.map(execute_multi_proccessing, my_urls)
+# execute_multi_proccessing(my_urls)
 ########### be kar giri algorithm baraye shabih sazi kalamate moshabe bara kalamati ke eshtebah type shode va to data base hast
 ######### be kar giri algorithm lcs longest common subsequence #######################
