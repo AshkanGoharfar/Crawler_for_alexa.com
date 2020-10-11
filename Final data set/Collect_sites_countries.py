@@ -181,6 +181,3 @@ if __name__ == '__main__':
     # f = open('data_V1.csv', 'a', encoding="utf-8")
 
     print('end task 4')
-
-########### be kar giri algorithm baraye shabih sazi kalamate moshabe bara kalamati ke eshtebah type shode va to data base hast
-######### be kar giri algorithm lcs longest common subsequence #######################
