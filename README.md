@@ -15,7 +15,7 @@ To Crawl alexa.com:
 Type input and output file name then type number of generation that you need
 
 ```bash
-$ python Main.py
+$ python Collect_dataset.py
 ```
 # Context
 Alexa used to rank sites based primarily on tracking a sample set of Internet traffic—users of its toolbar for the Internet Explorer, Firefox and Google Chrome web browsers. The Alexa Toolbar includes a popup blocker (which stops unwanted ads), a search box, links to Amazon.com and the Alexa homepage, and the Alexa ranking of the website that the user is visiting. It also allows the user to rate the website and view links to external, relevant websites. Also, Alexa has prepared a list of information for each site for comparison and ranking with other similar sites for each site.
