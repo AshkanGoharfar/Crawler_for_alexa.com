@@ -12,7 +12,7 @@ Sections headers will be used to reference the location of destination
 # Running
 To Crawl alexa.com:
 
-Type input and output file name then type number of generation that you need
+Write input and output file name and then write number of generation that you need
 
 ```bash
 $ python Collect_dataset.py
