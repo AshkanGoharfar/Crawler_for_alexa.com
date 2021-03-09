@@ -40,6 +40,7 @@ Ashkan Goharfar, ashkan_goharfar@aut.ac.ir,
 Department of Computer Engineering and Information Technology,
 Amirkabir University of Technology
 
+Dataset Source: https://www.kaggle.com/ashkangoharfar/sites-information-data-from-alexacom-dataset
 
 # Citation Request
 A. Risheh, A. Goharfar, and N. T. Javan, "Clustering Alexa Internet Data using Auto Encoder Network and Affinity Propagation," 2020 10th International Conference on Computer and Knowledge Engineering (ICCKE), Mashhad, Iran, 2020, pp. 437-443, doi: 10.1109/ICCKE50421.2020.9303705.
