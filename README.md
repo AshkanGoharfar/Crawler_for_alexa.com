@@ -36,7 +36,7 @@ This dataset was collected using the Beutiful soup and selenium library with chr
 # Acknowledgements
 
 Provider:
-Ashkan Goharfar, {ashkan_goharfar}@aut.ac.ir,
+Ashkan Goharfar, ashkan_goharfar@aut.ac.ir,
 Department of Computer Engineering and Information Technology,
 Amirkabir University of Technology
 
