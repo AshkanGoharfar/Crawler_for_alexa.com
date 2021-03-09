@@ -7,6 +7,7 @@ Sections headers will be used to reference the location of destination
 - [Content](#Content)
 - [How it's written](#How-it's-written)
 - [Acknowledgements](#Acknowledgements)
+- [Citation Request](#Citation-Request)
 - [Inspiration](#Inspiration)
 
 
@@ -32,14 +33,15 @@ For more details about each site's data, you can find the site's name and site's
 This dataset was collected using the Beutiful soup and selenium library with chrome web driver to crawl alexa.com data using python language.
 
 
-# Acknowledgements**
+# Acknowledgements
 
 Provider:
 Ashkan Goharfar, {ashkan_goharfar}@aut.ac.ir,
 Department of Computer Engineering and Information Technology,
 Amirkabir University of Technology
 
-Citation Request:
+
+# Citation Request:
 A. Risheh, A. Goharfar, and N. T. Javan, "Clustering Alexa Internet Data using Auto Encoder Network and Affinity Propagation," 2020 10th International Conference on Computer and Knowledge Engineering (ICCKE), Mashhad, Iran, 2020, pp. 437-443, doi: 10.1109/ICCKE50421.2020.9303705.
 
 
