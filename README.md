@@ -30,7 +30,7 @@ The data also includes keyword opportunities breakdown fields, which vary betwee
 For more details about each site's data, you can find the site's name and site's information in the dataset and you can search alexa.com/siteinfo/SiteName link to understand each parameter and columns in the dataset.
 
 # How it's written
-This dataset was collected using the Beutiful soup and selenium library with chrome web driver to crawl alexa.com data using python language.
+This dataset was collected using the Beautiful soup and selenium library with chrome web driver to crawl alexa.com data using python language.
 
 
 # Acknowledgements
