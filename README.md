@@ -16,7 +16,7 @@ To Crawl coinmarketcap.com airdrops:
 Run the following command.
 ```bash
 $ cd AirdropCrawler
-$ python Crawl_coinmarketcap.com.py.py
+$ python Crawl_coinmarketcap.com.py
 ```
 # Context
 
